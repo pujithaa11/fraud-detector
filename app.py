@@ -4,17 +4,17 @@ import pickle
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Page config
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
 
-# Load model and scaler
-@st.cache_resource
-def load_model():
-    model = pickle.load(open('model.pkl', 'rb'))
-    scaler = pickle.load(open('scaler.pkl', 'rb'))
-    return model, scaler
-
-model, scaler = load_model()
+# Load model WITHOUT cache - this fixes the error
+try:
+    with open('model.pkl', 'rb') as f:
+        model = pickle.load(f)
+    with open('scaler.pkl', 'rb') as f:
+        scaler = pickle.load(f)
+except Exception as e:
+    st.error(f"Error loading model files: {e}")
+    st.stop()
 
 # Initialize session state for history
 if 'history' not in st.session_state:
@@ -44,26 +44,22 @@ with tab1:
         merchant = st.selectbox("Merchant Category", ["Retail", "Online", "ATM", "Gas", "Grocery"])
     
     if st.button("🚨 Analyze Transaction", type="primary", use_container_width=True):
-        # Predict
         input_data = pd.DataFrame([[time, amount]], columns=['Time', 'Amount'])
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
         probability = model.predict_proba(input_scaled)[0]
         fraud_prob = probability[1] * 100
         
-        # Risk level logic
         if fraud_prob > 80: risk, color = "CRITICAL", "red"
         elif fraud_prob > 60: risk, color = "HIGH", "orange"
         elif fraud_prob > 30: risk, color = "MEDIUM", "yellow"
         else: risk, color = "LOW", "green"
         
-        # Save to history
         st.session_state.history.append({
             'Amount': amount, 'Time': time, 'Risk': f"{fraud_prob:.1f}%", 
             'Level': risk, 'Result': 'Fraud' if prediction == 1 else 'Safe'
         })
         
-        # Display results
         col1, col2 = st.columns([1,2])
         with col1:
             st.metric("Fraud Risk", f"{fraud_prob:.1f}%", delta=risk)
@@ -73,7 +69,6 @@ with tab1:
                 st.success("✅ TRANSACTION SAFE")
                 
         with col2:
-            # Risk meter chart
             fig, ax = plt.subplots(figsize=(8,2))
             ax.barh(['Risk'], [fraud_prob], color=color)
             ax.set_xlim(0, 100)
@@ -83,7 +78,6 @@ with tab1:
             ax.axvline(x=80, color='red', linestyle='--', alpha=0.5)
             st.pyplot(fig)
         
-        # Explainability
         with st.expander("🔬 Why this prediction?"):
             st.write(f"**Amount Impact**: {'High' if amount > 5000 else 'Low'}")
             st.write(f"**Time Pattern**: {'Suspicious' if time < 1000 or time > 150000 else 'Normal'}")
@@ -105,7 +99,6 @@ with tab2:
             st.success(f"Analyzed {len(df)} transactions")
             st.dataframe(df.head(100), use_container_width=True)
             
-            # Download button
             csv = df.to_csv(index=False).encode('utf-8')
             st.download_button("📥 Download Results", csv, "fraud_results.csv", "text/csv")
         else:
