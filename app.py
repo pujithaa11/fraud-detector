@@ -88,8 +88,8 @@ with tab2:
     st.header("Batch CSV Analysis")
     st.write("Upload CSV with columns: `Time`, `Amount`")
     
-    uploaded_file = st.file_uploader("Choose CSV file", type="csv")
-    if uploaded_file:
+   uploaded_file = st.file_uploader("Choose CSV file", type="csv")
+if uploaded_file:
     df = pd.read_csv(uploaded_file)
     if 'time' in df.columns and 'amount' in df.columns:
         df_scaled = scaler.transform(df[['time', 'amount']])
