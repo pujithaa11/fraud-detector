@@ -1,5 +1,7 @@
-streamlit
-pandas
-scikit-learn
-matplotlib
-numpy
+streamlit==1.35.0
+pandas==2.2.2
+scikit-learn==1.5.0
+matplotlib==3.8.4
+numpy==1.26.4
+protobuf==3.20.3
+joblib==1.4.2
