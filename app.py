@@ -7,11 +7,12 @@ import numpy as np
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
 
 # Load model WITHOUT cache - this fixes the error
+import joblib
+
+# Load model WITHOUT cache - using joblib instead of pickle
 try:
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
-    with open('scaler.pkl', 'rb') as f:
-        scaler = pickle.load(f)
+    model = joblib.load('model.pkl')
+    scaler = joblib.load('scaler.pkl')
 except Exception as e:
     st.error(f"Error loading model files: {e}")
     st.stop()
