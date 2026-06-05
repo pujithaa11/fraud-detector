@@ -86,7 +86,9 @@ with tab1:
         plt.close()
     except:
         st.info("Explanation loading...")
-        
+       fraud_prob = model.predict_proba(input_scaled)[0][1] * 100
+risk = "High" if fraud_prob > 50 else "Low"
+color = "red" if fraud_prob > 50 else "green" 
         with col2:
             fig, ax = plt.subplots(figsize=(8,2))
             ax.barh(['Risk'], [fraud_prob], color=color)
