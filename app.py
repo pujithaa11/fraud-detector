@@ -21,7 +21,6 @@ if 'history' not in st.session_state:
     st.session_state.history = []
 
 # Title and sidebar
-st.title("🛡️ FraudGuard Pro - ML Fraud Detection Dashboard")
 st.sidebar.header("📊 Model Performance")
 st.sidebar.metric("Accuracy", "99.82%", "2.1%")
 st.sidebar.metric("Precision", "98.5%", "1.3%") 
