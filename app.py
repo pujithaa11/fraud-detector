@@ -45,7 +45,7 @@ with tab1:
         merchant = st.selectbox("Merchant Category", ["Retail", "Online", "ATM", "Gas", "Grocery"])
     
     if st.button("🚨 Analyze Transaction", type="primary", use_container_width=True):
-        input_data = pd.DataFrame([[time, amount]], columns=['Time', 'Amount'])
+        input_data = pd.DataFrame([[time, amount]], columns=['time', 'amount'])
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
         probability = model.predict_proba(input_scaled)[0]
