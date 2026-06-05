@@ -1,13 +1,10 @@
 import streamlit as st
 import pandas as pd
-import pickle
+import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
-
-# Load model WITHOUT cache - this fixes the error
-import joblib
 
 # Load model WITHOUT cache - using joblib instead of pickle
 try:
@@ -51,14 +48,21 @@ with tab1:
         probability = model.predict_proba(input_scaled)[0]
         fraud_prob = probability[1] * 100
         
-        if fraud_prob > 80: risk, color = "CRITICAL", "red"
-        elif fraud_prob > 60: risk, color = "HIGH", "orange"
-        elif fraud_prob > 30: risk, color = "MEDIUM", "yellow"
-        else: risk, color = "LOW", "green"
+        if fraud_prob > 80:
+            risk, color = "CRITICAL", "red"
+        elif fraud_prob > 60:
+            risk, color = "HIGH", "orange"
+        elif fraud_prob > 30:
+            risk, color = "MEDIUM", "yellow"
+        else:
+            risk, color = "LOW", "green"
         
         st.session_state.history.append({
-            'Amount': amount, 'Time': time, 'Risk': f"{fraud_prob:.1f}%", 
-            'Level': risk, 'Result': 'Fraud' if prediction == 1 else 'Safe'
+            'Amount': amount, 
+            'Time': time, 
+            'Risk': f"{fraud_prob:.1f}%", 
+            'Level': risk, 
+            'Result': 'Fraud' if prediction == 1 else 'Safe'
         })
         
         col1, col2 = st.columns([1,2])
@@ -83,7 +87,7 @@ with tab1:
             st.write(f"**Amount Impact**: {'High' if amount > 5000 else 'Low'}")
             st.write(f"**Time Pattern**: {'Suspicious' if time < 1000 or time > 150000 else 'Normal'}")
             st.write(f"**Merchant Risk**: {merchant} category has {'elevated' if merchant in ['ATM','Online'] else 'normal'} risk")
-            
+
 with tab2:
     st.header("Batch CSV Analysis")
     st.write("Upload CSV with columns: `time`, `amount`")
