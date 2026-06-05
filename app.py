@@ -91,8 +91,8 @@ with tab2:
     uploaded_file = st.file_uploader("Choose CSV file", type="csv")
     if uploaded_file:
         df = pd.read_csv(uploaded_file)
-        if 'Time' in df.columns and 'Amount' in df.columns:
-            df_scaled = scaler.transform(df[['Time', 'Amount']])
+          if 'time' in df.columns and 'amount' in df.columns:
+              df_scaled = scaler.transform(df[['time', 'amount']])  
             df['Fraud_Probability'] = model.predict_proba(df_scaled)[:,1] * 100
             df['Prediction'] = model.predict(df_scaled)
             df['Risk_Level'] = pd.cut(df['Fraud_Probability'], bins=[0,30,60,80,100], labels=['Low','Medium','High','Critical'])
