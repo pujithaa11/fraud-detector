@@ -5,3 +5,4 @@ matplotlib==3.8.4
 numpy==1.26.4
 protobuf==3.20.3
 joblib==1.4.2
+shap==0.44.0
