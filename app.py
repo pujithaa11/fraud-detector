@@ -83,7 +83,7 @@ with tab1:
             st.write(f"**Amount Impact**: {'High' if amount > 5000 else 'Low'}")
             st.write(f"**Time Pattern**: {'Suspicious' if time < 1000 or time > 150000 else 'Normal'}")
             st.write(f"**Merchant Risk**: {merchant} category has {'elevated' if merchant in ['ATM','Online'] else 'normal'} risk")
-
+            
 with tab2:
     st.header("Batch CSV Analysis")
     st.write("Upload CSV with columns: `time`, `amount`")
