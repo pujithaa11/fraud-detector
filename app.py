@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
-
+st.title("🛡️ FraudGuard Pro") 
+st.markdown("Real-time credit card fraud detection using machine learning")
+st.divider()
 # Load model WITHOUT cache - using joblib instead of pickle
 try:
     model = joblib.load('model.pkl')
