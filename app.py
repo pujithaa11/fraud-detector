@@ -3,8 +3,6 @@ import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
-import shap
-import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
 
@@ -75,20 +73,6 @@ with tab1:
             else:
                 st.success("✅ TRANSACTION SAFE")
                 
-            with st.expander("🔍 Why did the model decide this?"):
-    try:
-        explainer = shap.LinearExplainer(model, input_scaled)
-        shap_values = explainer.shap_values(input_scaled)
-        
-        fig, ax = plt.subplots(figsize=(10, 3))
-        shap.plots.waterfall(shap_values[0], show=False)
-        st.pyplot(fig)
-        plt.close()
-    except:
-        st.info("Explanation loading...")
-       fraud_prob = model.predict_proba(input_scaled)[0][1] * 100
-risk = "High" if fraud_prob > 50 else "Low"
-color = "red" if fraud_prob > 50 else "green" 
         with col2:
             fig, ax = plt.subplots(figsize=(8,2))
             ax.barh(['Risk'], [fraud_prob], color=color)
