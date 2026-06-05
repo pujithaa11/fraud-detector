@@ -75,20 +75,17 @@ with tab1:
             else:
                 st.success("✅ TRANSACTION SAFE")
                 
-            # SHAP Explanation - For Logistic Regression
-    with st.expander("🔍 Why did the model decide this?"):
-        try:
-            # LinearExplainer needs background data
-            explainer = shap.LinearExplainer(model, input_df)
-            shap_values = explainer.shap_values(input_df)
-
-            fig, ax = plt.subplots(figsize=(10, 3))
-            shap.plots.waterfall(shap_values[0], show=False)
-            st.pyplot(fig)
-            plt.close()
-            st.caption("Red = pushes toward FRAUD. Blue = pushes toward SAFE.")
-        except Exception as e:
-            st.info("Model explanation loading...")
+            with st.expander("🔍 Why did the model decide this?"):
+    try:
+        explainer = shap.LinearExplainer(model, input_scaled)
+        shap_values = explainer.shap_values(input_scaled)
+        
+        fig, ax = plt.subplots(figsize=(10, 3))
+        shap.plots.waterfall(shap_values[0], show=False)
+        st.pyplot(fig)
+        plt.close()
+    except:
+        st.info("Explanation loading...")
         
         with col2:
             fig, ax = plt.subplots(figsize=(8,2))
