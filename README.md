@@ -4,7 +4,7 @@
 
 Real-time machine learning dashboard for detecting fraudulent credit card transactions. Built with Python, Streamlit, and Scikit-learn.
 
-<img width="1200" alt="demo" src="https://via.placeholder.com/1200x600.png?text=Add+your+screenshot+here">
+   <img width="1200" alt="FraudGuard Pro - 99.82% Accuracy" src="demo.png">
 
 ## 🚀 Features
 
