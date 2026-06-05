@@ -82,7 +82,7 @@ with tab1:
             ax.axvline(x=60, color='orange', linestyle='--', alpha=0.5)
             ax.axvline(x=80, color='red', linestyle='--', alpha=0.5)
             st.pyplot(fig)
-        
+            st.caption("🟡 Low Risk: 0-30% | 🟠 Medium: 30-60% | 🔴 High: 60-100%")
         with st.expander("🔬 Why this prediction?"):
             st.write(f"**Amount Impact**: {'High' if amount > 5000 else 'Low'}")
             st.write(f"**Time Pattern**: {'Suspicious' if time < 1000 or time > 150000 else 'Normal'}")
