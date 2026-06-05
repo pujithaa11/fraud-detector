@@ -91,20 +91,19 @@ with tab2:
     uploaded_file = st.file_uploader("Choose CSV file", type="csv")
     if uploaded_file:
         df = pd.read_csv(uploaded_file)
-    df = pd.read_csv(uploaded_file)
-    if 'time' in df.columns and 'amount' in df.columns:
-        df['Fraud_Probability'] = model.predict_proba(df_scaled)[:,1] * 100
-        df['Prediction'] = model.predict(df_scaled)
-        df['Risk_Level'] = pd.cut(df['Fraud_Probability'], bins=[0,30,60,80,100], labels=['Low','Medium','High','Critical'])
-        
-        
-        st.success(f"Analyzed {len(df)} transactions")
-        st.dataframe(df.head(100), use_container_width=True)
-        
-        csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download Results", csv, "fraud_results.csv", "text/csv")
-    else:
-        st.error("CSV must have 'time' and 'amount' columns - lowercase")
+        if 'time' in df.columns and 'amount' in df.columns:
+            df_scaled = scaler.transform(df[['time', 'amount']])
+            df['Fraud_Probability'] = model.predict_proba(df_scaled)[:,1] * 100
+            df['Prediction'] = model.predict(df_scaled)
+            df['Risk_Level'] = pd.cut(df['Fraud_Probability'], bins=[0,30,60,80,100], labels=['Low','Medium','High','Critical'])
+            
+            st.success(f"Analyzed {len(df)} transactions")
+            st.dataframe(df.head(100), use_container_width=True)
+            
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 Download Results", csv, "fraud_results.csv", "text/csv")
+        else:
+            st.error("CSV must have 'time' and 'amount' columns - lowercase")
 
 with tab3:
     st.header("Transaction Analytics")
