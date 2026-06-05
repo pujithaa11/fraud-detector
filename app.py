@@ -75,24 +75,20 @@ with tab1:
             else:
                 st.success("✅ TRANSACTION SAFE")
                 
-        # SHAP Explanation - Safe sandbox
-with st.expander("🔍 Why did the model decide this? Click to see"):
-    try:
-        # Use TreeExplainer for XGBoost/Random Forest
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(input_df)
+            # SHAP Explanation - For Logistic Regression
+    with st.expander("🔍 Why did the model decide this?"):
+        try:
+            # LinearExplainer needs background data
+            explainer = shap.LinearExplainer(model, input_df)
+            shap_values = explainer.shap_values(input_df)
 
-        st.write("**Features pushing toward FRAUD:**")
-        fig, ax = plt.subplots(figsize=(10, 3))
-        shap.plots.waterfall(shap_values[0], show=False)
-        st.pyplot(fig)
-        plt.close()
-
-        st.caption("Red bars increase fraud risk. Blue bars decrease it.")
-
-    except Exception as e:
-        st.warning(f"Explanation unavailable: {e}")
-        st.info("SHAP works best with tree models like XGBoost or Random Forest")
+            fig, ax = plt.subplots(figsize=(10, 3))
+            shap.plots.waterfall(shap_values[0], show=False)
+            st.pyplot(fig)
+            plt.close()
+            st.caption("Red = pushes toward FRAUD. Blue = pushes toward SAFE.")
+        except Exception as e:
+            st.info("Model explanation loading...")
         
         with col2:
             fig, ax = plt.subplots(figsize=(8,2))
