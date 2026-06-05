@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
+import shap
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="FraudGuard Pro", page_icon="🛡️", layout="wide")
 
@@ -73,6 +75,25 @@ with tab1:
             else:
                 st.success("✅ TRANSACTION SAFE")
                 
+        # SHAP Explanation - Safe sandbox
+with st.expander("🔍 Why did the model decide this? Click to see"):
+    try:
+        # Use TreeExplainer for XGBoost/Random Forest
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer.shap_values(input_df)
+
+        st.write("**Features pushing toward FRAUD:**")
+        fig, ax = plt.subplots(figsize=(10, 3))
+        shap.plots.waterfall(shap_values[0], show=False)
+        st.pyplot(fig)
+        plt.close()
+
+        st.caption("Red bars increase fraud risk. Blue bars decrease it.")
+
+    except Exception as e:
+        st.warning(f"Explanation unavailable: {e}")
+        st.info("SHAP works best with tree models like XGBoost or Random Forest")
+        
         with col2:
             fig, ax = plt.subplots(figsize=(8,2))
             ax.barh(['Risk'], [fraud_prob], color=color)
